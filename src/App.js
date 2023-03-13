@@ -1,11 +1,44 @@
-import twitterLogo from "./assets/twitter-logo.svg"
-import "./App.css"
+import React, { useEffect } from "react";
+import twitterLogo from "./assets/twitter-logo.svg";
+import "./App.css";
 
-// Constants
-const TWITTER_HANDLE = "web3dev_"
-const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`
+// Mude isso para seu Twitter se quiser.
+const TWITTER_HANDLE = "web3dev_";
+const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
+  /*
+   * Essa função possui a lógica para definir se a Phantom Wallet
+   * está conectada ou não
+   */
+  const checkIfWalletIsConnected = async () => {
+    try {
+      const { solana } = window;
+
+      if (solana) {
+        if (solana.isPhantom) {
+          console.log("Phantom wallet encontrada!");
+        }
+      } else {
+        alert("Objeto Solana não encontrado! Instale a Phantom Wallet 👻");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /*
+   * Quando seu componente 'montar' pela primeira vez, vamos verificar se
+   * temos uma Phantom Wallet conectada
+   */
+  useEffect(() => {
+    const onLoad = async () => {
+      await checkIfWalletIsConnected();
+    };
+    window.addEventListener("load", onLoad);
+    return () => window.removeEventListener("load", onLoad);
+  }, []);
+
   return (
     <div className="App">
       <div className="container">
@@ -24,7 +57,7 @@ const App = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
